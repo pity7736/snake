@@ -2,13 +2,13 @@ use super::direction::Direction;
 
 #[derive(Copy, Clone)]
 pub struct Position {
-    row: u8,
-    column: u8
+    row: usize,
+    column: usize
 }
 
 impl Position {
 
-    pub fn new(row: u8, column: u8) -> Self {
+    pub fn new(row: usize, column: usize) -> Self {
         Self { row, column }
     }
 
@@ -16,24 +16,16 @@ impl Position {
         match direction {
             Direction::DOWN => return Self {row: self.row + 1, column: self.column},
             Direction::RIGHT => return Self {row: self.row, column: self.column + 1},
-            Direction::UP => todo!(),
-            Direction::LEFT => todo!(),
+            Direction::UP => return Self {row: self.row - 1, column: self.column},
+            Direction::LEFT => return Self {row: self.row, column: self.column - 1},
         }
     }
 
-    pub fn row(&self) -> u8 {
-        self.row
-    }
-
-    pub fn row_as_usize(&self) -> usize {
-        return usize::from(self.row);
+    pub fn row(&self) -> usize {
+        return self.row
     }
     
-    pub fn column(&self) -> u8 {
-        self.column
-    }
-
-    pub fn column_as_usize(&self) -> usize {
-        return usize::from(self.column);
+    pub fn column(&self) -> usize {
+        return self.column
     }
 }

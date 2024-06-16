@@ -1,4 +1,4 @@
-use crate::{application::board_shower::BoardShower, domain::board::Board};
+use crate::{application::board_shower::BoardShower, domain::{board::Board, constans}};
 
 
 pub struct ConsoleBoardShower{
@@ -9,25 +9,29 @@ impl ConsoleBoardShower {
         Self {  }
     }
 
+    fn print_horizontal_line() {
+        for _ in 0..constans::BOARD_WIDTH {
+            print!("--");
+        }
+        print!("-");   
+    }
+
 }
 
 impl BoardShower for ConsoleBoardShower{
     fn show(&self, board: &Board) {
         print!("{esc}c", esc = 27 as char);
-        for _ in 0..board.cells()[0].len() {
-            print!("-")
-        }
+        ConsoleBoardShower::print_horizontal_line();
         println!("");
         for row in board.cells() {
+            print!("|");
             for cell in row {
-                print!("{}", cell);
+                print!("{} ", cell);
             }
+            print!("|");
             println!("");
         }
-        println!("");
-        for _ in 0..board.cells()[0].len() {
-            print!("-")
-        }
+        ConsoleBoardShower::print_horizontal_line();
         println!("");
     }
 }
