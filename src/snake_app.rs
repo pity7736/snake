@@ -19,7 +19,7 @@ impl<'a> SnakeApp<'a> {
     pub fn start(&mut self) {
         self.shower.show(&self.board);
         let mut direction = SnakeApp::ask_direction();
-        let mut new_direction = direction;
+        let mut new_direction: Direction;
         let (sender, receiver) = mpsc::channel::<Direction>();
         thread::spawn(move || {
             loop {
