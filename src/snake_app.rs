@@ -35,7 +35,7 @@ impl<'a> SnakeApp<'a> {
             } else {
                 new_direction = direction;
             }
-            
+
             self.board.move_snake(new_direction);
             self.shower.show(&self.board)       
         }

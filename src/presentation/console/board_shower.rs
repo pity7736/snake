@@ -13,7 +13,7 @@ impl ConsoleBoardShower {
         for _ in 0..constans::BOARD_WIDTH {
             print!("--");
         }
-        print!("-");   
+        print!("-");
     }
 
 }
@@ -26,7 +26,11 @@ impl BoardShower for ConsoleBoardShower{
         for row in board.cells() {
             print!("|");
             for cell in row {
-                print!("{} ", cell);
+                if cell.is_empty() {
+                    print!(". ");
+                } else {
+                    print!("{} ", cell)
+                }
             }
             print!("|");
             println!("");

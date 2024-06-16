@@ -11,7 +11,7 @@ impl Board {
     pub fn new() -> Self {
         let mut columns:Vec<String> = Vec::with_capacity(constans::BOARD_WIDTH);
         let mut cells: Vec<Vec<String>> = Vec::with_capacity(constans::BOARD_HEIGHT);
-        let character = String::from(".");
+        let character = String::from("");
         for _i in 0..constans::BOARD_WIDTH {
             columns.push(character.clone());
         }
