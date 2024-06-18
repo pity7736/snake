@@ -1,6 +1,7 @@
 use crate::domain::board::Board;
 
-
-pub trait BoardShower {
+pub trait UI {
     fn show(&self, board: &Board);
+
+    fn start(&mut self);
 }

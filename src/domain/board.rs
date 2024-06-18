@@ -30,18 +30,24 @@ impl Board {
         }
     }
 
-    pub fn get_snake_position(&self) -> Position {
-        return self.snake_position;
-    }
-
     pub fn move_snake(&mut self, direction: Direction) {
         let position = self.snake_position.move_(direction);
-        self.cells[self.snake_position.row()][self.snake_position.column()] = self.character.clone();
-        self.cells[position.row()][position.column()] = String::from("$");
-        self.snake_position = position;
+        if position.column() < constans::BOARD_WIDTH && position.row() < constans::BOARD_HEIGHT{
+            self.cells[self.snake_position.row()][self.snake_position.column()] = self.character.clone();
+            self.cells[position.row()][position.column()] = String::from("$");
+            self.snake_position = position;
+        }
     }
-    
+
+    pub fn is_snake_in_limit_position(&self) -> bool {
+        return self.snake_position.column() == constans::BOARD_WIDTH - 1 || self.snake_position.row() == constans::BOARD_HEIGHT -1;
+    }
+
     pub fn cells(&self) -> &Vec<Vec<String>> {
         return &self.cells
+    }
+
+    pub fn get_snake_position(&self) -> Position {
+        return self.snake_position;
     }
 }

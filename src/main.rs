@@ -1,13 +1,8 @@
-use snake::{
-    presentation::console::board_shower::ConsoleBoardShower,
-    snake_app::SnakeApp
-};
-
+use snake::snake_app::SnakeApp;
 
 
 
 fn main() {
-    let shower = ConsoleBoardShower::new();
-    let mut app = SnakeApp::new(&shower);
+    let app = SnakeApp::new();
     app.start()
 } 
