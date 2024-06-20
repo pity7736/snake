@@ -26,6 +26,7 @@ impl<'a> PlayController<'a> {
                     direction = direction_result.unwrap();
                 }
             } else {
+                self.ui.show_lost_message();
                 break;
             }
         }

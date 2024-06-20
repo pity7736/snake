@@ -71,6 +71,10 @@ impl UI for ConsoleUI{
         }
         return self.ask_direction();
     }
+
+    fn show_lost_message(&self) {
+        println!("¡Perdiste!")
+    }
 }
 
 

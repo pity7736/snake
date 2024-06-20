@@ -9,4 +9,6 @@ pub trait UI {
 
     fn ask_direction(&self) -> Direction;
 
+    fn show_lost_message(&self);
+
 }

@@ -19,6 +19,8 @@ fn play() {
             fn start(&self) -> Receiver<Direction>;
         
             fn ask_direction(&self) -> Direction;
+
+            fn show_lost_message(&self);
         }
     }
     let mut ui_mock = MockMyUI::new();
@@ -26,6 +28,7 @@ fn play() {
     ui_mock.expect_ask_direction().returning(|| Direction::RIGHT);
     let (_sender, receiver) = channel::<Direction>();
     ui_mock.expect_start().times(1).return_once(|| receiver);
+    ui_mock.expect_show_lost_message().times(1).returning(|| ());
     let mut play_controller = PlayController::new(&ui_mock);
 
     play_controller.play();
