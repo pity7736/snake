@@ -1,29 +1,38 @@
-use crate::domain::{board::Board, direction::Direction};
+use crate::domain::board::Board;
 
-pub struct PlayController {
+use super::ui::UI;
+
+pub struct PlayController<'a> {
     board: Board,
-    direction: Option<Direction>
+    ui: &'a dyn UI
 }
 
-impl PlayController {
+impl<'a> PlayController<'a> {
 
-    pub fn new() -> Self {
-        Self {  board: Board::new(), direction: None}
+    pub fn new(ui: &'a dyn UI) -> Self {
+        Self { board: Board::new(), ui }
     }
 
     pub fn play(&mut self) {
-        if self.board.is_snake_in_limit_position() {
-            return;
-        } else {
-            self.board.move_snake(self.direction.unwrap());
+        self.ui.show(&self.board);
+        let mut direction = self.ui.ask_direction();
+        let receiver = self.ui.start();
+        loop {
+            if self.is_playing() {
+                self.board.move_snake(direction);
+                self.ui.show(&self.board);
+                let direction_result = receiver.try_recv();
+                if direction_result.is_ok() {
+                    direction = direction_result.unwrap();
+                }
+            } else {
+                break;
+            }
         }
     }
 
-    pub fn set_direction(&mut self, direction: Direction) {
-        self.direction = Some(direction);
+    fn is_playing(&self) -> bool {
+        return !self.board.is_snake_in_limit_position();
     }
-    
-    pub fn board(&self) -> &Board {
-        &self.board
-    }
+
 }

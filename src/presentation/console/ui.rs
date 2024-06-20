@@ -1,7 +1,7 @@
-use std::{io, sync::mpsc, thread::{self, sleep}, time::Duration};
+use std::{io, sync::mpsc::{self, Receiver}, thread::{self, sleep}, time::Duration};
 
 use crate::{
-    application::{play_controller::PlayController, ui::UI},
+    application::ui::UI,
     domain::{
         board::Board,
         constans,
@@ -10,13 +10,12 @@ use crate::{
 };
 
 
-pub struct ConsoleUI{
-    play_controller: PlayController
-}
+pub struct ConsoleUI{}
 
 impl ConsoleUI {
-    pub fn new(play_controller: PlayController) -> Self {
-        Self { play_controller }
+
+    pub fn new() -> Self {
+        Self {  }
     }
 
     fn print_horizontal_line() {
@@ -25,6 +24,7 @@ impl ConsoleUI {
         }
         print!("-");
     }
+
 }
 
 
@@ -51,34 +51,30 @@ impl UI for ConsoleUI{
         println!("");
     }
 
-    fn start(&mut self) {
-        self.show(self.play_controller.board());
-        let d = _ask_direction();
-        if d.is_some() {
-            self.play_controller.set_direction(d.unwrap());
-            let (sender, receiver) = mpsc::channel::<Direction>();
-            thread::spawn(move || {
-                loop {
-                    let key = _ask_direction();
-                    if key.is_some() {
-                        let _ = sender.send(key.unwrap());
-                    }
-                }
-            });
+    fn start(&self) -> Receiver<Direction> {
+        let (sender, receiver) = mpsc::channel::<Direction>();
+        thread::spawn(move || {
             loop {
-                self.show(self.play_controller.board());
-                let m = receiver.try_recv();
-                if m.is_ok() {
-                    self.play_controller.set_direction(m.unwrap())
+                let direction_result = ask_direction();
+                if direction_result.is_some() {
+                    let _ = sender.send(direction_result.unwrap());
                 }
-                self.play_controller.play();
             }
+        });
+        return receiver;
+    }
+
+    fn ask_direction(&self) -> Direction {
+        let direction_result = ask_direction();
+        if direction_result.is_some() {
+            return direction_result.unwrap();
         }
+        return self.ask_direction();
     }
 }
 
 
-fn _ask_direction() -> Option<Direction>{
+fn ask_direction() -> Option<Direction>{
     let mut direction_input = String::new();
     io::stdin()
         .read_line(&mut direction_input)
