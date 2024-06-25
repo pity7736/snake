@@ -2,13 +2,13 @@ use super::direction::Direction;
 
 #[derive(Copy, Clone)]
 pub struct Position {
-    row: usize,
-    column: usize
+    row: i8,
+    column: i8
 }
 
 impl Position {
 
-    pub fn new(row: usize, column: usize) -> Self {
+    pub fn new(row: i8, column: i8) -> Self {
         Self { row, column }
     }
 
@@ -21,11 +21,11 @@ impl Position {
         }
     }
 
-    pub fn row(&self) -> usize {
+    pub fn row(&self) -> i8 {
         return self.row
     }
-    
-    pub fn column(&self) -> usize {
+
+    pub fn column(&self) -> i8 {
         return self.column
     }
 }
