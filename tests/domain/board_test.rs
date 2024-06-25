@@ -1,116 +1,96 @@
 use snake::domain::board::Board;
-use snake::domain::constans;
 use snake::domain::direction::Direction;
+use snake::domain::position::Position;
 
 
 #[test]
 pub fn inital_snake_position() {
     let board = Board::new();
 
-    let position = board.get_snake_position();
     let cells = board.cells();
 
-    assert_eq!(constans::BOARD_HEIGHT / 2, position.row());
-    assert_eq!(constans::BOARD_WIDTH / 2, position.column()) ;
-    assert_eq!("$", cells[position.row()][position.column()])
+    assert_eq!("$", cells[board.get_width() / 2][board.get_height() / 2])
 }
 
 #[test]
 pub fn move_snake_right() {
     let mut board = Board::new();
-    let initial_snake_position = board.get_snake_position();
+    let initial_snake_position = Position::new(board.get_width() /2, board.get_height() / 2);
 
     board.move_snake(Direction::RIGHT);
 
-    let position = board.get_snake_position();
+    let snake_position = Position::new(initial_snake_position.row(), initial_snake_position.column() + 1);
     let cells = board.cells();
 
-    assert_eq!(initial_snake_position.row(), position.row());
-    assert_eq!(initial_snake_position.column() + 1, position.column());
-    assert_eq!("$", cells[position.row()][position.column()]);
+    assert_eq!("$", cells[snake_position.row()][snake_position.column()]);
     assert_eq!("", cells[initial_snake_position.row()][initial_snake_position.column()]);
-    assert_eq!(false, board.is_snake_in_limit_position());
+    assert_eq!(false, board.snake_has_crashed());
 }
 
 #[test]
 pub fn move_snake_down() {
     let mut board = Board::new();
-    let initial_snake_position = board.get_snake_position();
+    let initial_snake_position = Position::new(board.get_width() /2, board.get_height() / 2);
 
     board.move_snake(Direction::DOWN);
 
-    let position = board.get_snake_position();
     let cells = board.cells();
+    let snake_position = Position::new(initial_snake_position.row() + 1, initial_snake_position.column());
 
-    assert_eq!(initial_snake_position.row() + 1, position.row());
-    assert_eq!(initial_snake_position.column(), position.column());
-    assert_eq!("$", cells[position.row()][position.column()]);
+    assert_eq!("$", cells[snake_position.row()][snake_position.column()]);
+    assert_eq!("", cells[initial_snake_position.row()][initial_snake_position.column()]);
+    assert_eq!(false, board.snake_has_crashed());
 }
 
 #[test]
 pub fn move_snake_up() {
     let mut board = Board::new();
-    let initial_snake_position = board.get_snake_position();
+    let initial_snake_position = Position::new(board.get_width() /2, board.get_height() / 2);
 
     board.move_snake(Direction::DOWN);
     board.move_snake(Direction::DOWN);
     board.move_snake(Direction::RIGHT);
     board.move_snake(Direction::UP);
 
-    let position = board.get_snake_position();
+    let snake_position = Position::new(initial_snake_position.row() + 1, initial_snake_position.column() + 1);
     let cells = board.cells();
 
-    assert_eq!(initial_snake_position.row() + 1, position.row());
-    assert_eq!(initial_snake_position.column() + 1, position.column());
-    assert_eq!("$", cells[position.row()][position.column()]);
+    assert_eq!("$", cells[snake_position.row()][snake_position.column()]);
 }
 
 #[test]
 pub fn move_snake_left() {
     let mut board = Board::new();
-    let initial_snake_position = board.get_snake_position();
+    let initial_snake_position = Position::new(board.get_width() /2, board.get_height() / 2);
 
     board.move_snake(Direction::DOWN);
     board.move_snake(Direction::RIGHT);
     board.move_snake(Direction::RIGHT);
     board.move_snake(Direction::LEFT);
 
-    let position = board.get_snake_position();
+    let position = Position::new(initial_snake_position.row() + 1, initial_snake_position.column() + 1);
     let cells = board.cells();
 
-    assert_eq!(initial_snake_position.row() + 1, position.row());
-    assert_eq!(initial_snake_position.column() + 1, position.column());
     assert_eq!("$", cells[position.row()][position.column()]);
 }
 
 #[test]
-fn board_column_limit_collition() {
+fn snake_right_crash() {
     let mut board = Board::new();
-    let initial_snake_position = board.get_snake_position();
-
-    for _ in 0..constans::BOARD_WIDTH / 2 {
+    for _ in 0..(board.get_width() / 2 + 1){
         board.move_snake(Direction::RIGHT)
     }
 
-    let snake_position = board.get_snake_position();
-
-    assert_eq!(true, board.is_snake_in_limit_position());
-    assert_eq!(initial_snake_position.row(), snake_position.row());
-    assert_eq!(constans::BOARD_WIDTH - 1, snake_position.column());
+    assert_eq!(true, board.snake_has_crashed());
 }
 
 #[test]
-fn board_row_limit_collition() {
+fn snake_down_crash() {
     let mut board = Board::new();
-    let initial_snake_position = board.get_snake_position();
 
-    for _ in 0..constans::BOARD_HEIGHT / 2 {
+    for _ in 0..board.get_height() / 2 + 1 {
         board.move_snake(Direction::DOWN)
     }
 
-    let snake_position = board.get_snake_position();
-
-    assert_eq!(true, board.is_snake_in_limit_position());
-    assert_eq!(initial_snake_position.column(), snake_position.column());
-    assert_eq!(constans::BOARD_HEIGHT - 1, snake_position.row());
+    assert_eq!(true, board.snake_has_crashed());
 }

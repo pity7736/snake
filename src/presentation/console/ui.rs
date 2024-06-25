@@ -4,7 +4,6 @@ use crate::{
     application::ui::UI,
     domain::{
         board::Board,
-        constans,
         direction::Direction
     }
 };
@@ -18,8 +17,8 @@ impl ConsoleUI {
         Self {  }
     }
 
-    fn print_horizontal_line() {
-        for _ in 0..constans::BOARD_WIDTH {
+    fn print_horizontal_line(board: &Board) {
+        for _ in 0..board.get_width() {
             print!("--");
         }
         print!("-");
@@ -33,7 +32,7 @@ impl UI for ConsoleUI{
     fn show(&self, board: &Board) {
         sleep(Duration::from_millis(100));
         print!("{esc}c", esc = 27 as char);
-        ConsoleUI::print_horizontal_line();
+        ConsoleUI::print_horizontal_line(board);
         println!("");
         for row in board.cells() {
             print!("|");
@@ -47,7 +46,7 @@ impl UI for ConsoleUI{
             print!("|");
             println!("");
         }
-        ConsoleUI::print_horizontal_line();
+        ConsoleUI::print_horizontal_line(board);
         println!("");
     }
 

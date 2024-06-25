@@ -33,7 +33,7 @@ impl<'a> PlayController<'a> {
     }
 
     fn is_playing(&self) -> bool {
-        return !self.board.is_snake_in_limit_position();
+        return !self.board.snake_has_crashed();
     }
 
 }
