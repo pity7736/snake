@@ -47,8 +47,8 @@ impl Board {
     }
 
     fn is_position_within_board(&self, position: Position) -> bool {
-        return position.column().is_positive() &&
-            position.row().is_positive() &&
+        return position.column() >= 0 &&
+            position.row() >= 0 &&
             position.column() < self.width.try_into().unwrap() &&
             position.row() < self.height.try_into().unwrap();
     }

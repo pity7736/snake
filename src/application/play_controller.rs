@@ -22,7 +22,7 @@ impl<'a> PlayController<'a> {
                 self.board.move_snake(direction);
                 self.ui.show(&self.board);
                 let direction_result = receiver.try_recv();
-                if direction_result.is_ok() {
+                if direction_result.is_ok() && !direction_result.unwrap().is_opposite_of(direction) {
                     direction = direction_result.unwrap();
                 }
             } else {
