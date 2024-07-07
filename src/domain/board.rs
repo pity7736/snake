@@ -4,7 +4,8 @@ use super::{direction::Direction, position::Position};
 pub struct Board {
     cells: Vec<Vec<String>>,
     snake_position: Position,
-    character: String,
+    empty_value_character: String,
+    snake_head_character: String,
     width: u8,
     height: u8
 }
@@ -15,9 +16,10 @@ impl Board {
         let height: u8 = 30;
         let mut columns:Vec<String> = Vec::with_capacity(width.into());
         let mut cells: Vec<Vec<String>> = Vec::with_capacity(height.into());
-        let character = String::from("");
+        let empty_value_character = String::from("");
+        let snake_head_character = String::from("$");
         for _ in 0..width {
-            columns.push(character.clone());
+            columns.push(empty_value_character.clone());
         }
         for _ in 0..height {
             cells.push(columns.clone());
@@ -26,11 +28,12 @@ impl Board {
             (width / 2).try_into().unwrap(),
             (height / 2).try_into().unwrap()
         );
-        cells[usize::try_from(snake_position.row()).unwrap()][usize::try_from(snake_position.column()).unwrap()] = "$".to_string();
+        cells[usize::try_from(snake_position.row()).unwrap()][usize::try_from(snake_position.column()).unwrap()] = snake_head_character.clone();
         Self {
             cells,
             snake_position,
-            character,
+            empty_value_character,
+            snake_head_character,
             width,
             height
         }
@@ -41,9 +44,13 @@ impl Board {
         let position = self.snake_position.move_(direction);
         self.snake_position = position;
         if self.is_position_within_board(position){
-            self.cells[usize::try_from(current_snake_position.row()).unwrap()][usize::try_from(current_snake_position.column()).unwrap()] = self.character.clone();
-            self.cells[usize::try_from(position.row()).unwrap()][usize::try_from(position.column()).unwrap()] = String::from("$");
+            self.set_value_in_cells(current_snake_position, self.empty_value_character.clone());
+            self.set_value_in_cells(position, self.snake_head_character.clone());
         }
+    }
+
+    fn set_value_in_cells(&mut self, position: Position, value: String) {
+        self.cells[usize::try_from(position.row()).unwrap()][usize::try_from(position.column()).unwrap()] = value;
     }
 
     fn is_position_within_board(&self, position: Position) -> bool {
