@@ -9,8 +9,12 @@ pub fn inital_snake_position() {
     let board = Board::new();
 
     let cells = board.cells();
+    let snake_position = Position::new(
+        ((board.get_width() / 2)).try_into().unwrap(),
+        (board.get_height() / 2).to_owned().try_into().unwrap()
+    );
 
-    assert_eq!(SNAKE_HEAD_CHARACTER, cells[get_usize_from_u8(board.get_width() / 2)][get_usize_from_u8(board.get_height() / 2)])
+    assert!(is_snake_head_in_position(cells, snake_position));
 }
 
 #[test]
@@ -26,8 +30,8 @@ pub fn move_snake_right() {
     let snake_position = Position::new(initial_snake_position.row(), initial_snake_position.column() + 1);
     let cells = board.cells();
 
-    assert_eq!(SNAKE_HEAD_CHARACTER, cells[get_usize_from_i8(snake_position.row())][get_usize_from_i8(snake_position.column())]);
-    assert_eq!(EMPTY_VALUE_CHARACTER, cells[get_usize_from_i8(initial_snake_position.row())][get_usize_from_i8(initial_snake_position.column())]);
+    assert!(is_snake_head_in_position(cells, snake_position));
+    assert!(is_cell_empty(cells, initial_snake_position));
     assert_eq!(false, board.snake_has_crashed());
 }
 
@@ -44,8 +48,8 @@ pub fn move_snake_down() {
     let cells = board.cells();
     let snake_position = Position::new(initial_snake_position.row() + 1, initial_snake_position.column());
 
-    assert_eq!(SNAKE_HEAD_CHARACTER, cells[get_usize_from_i8(snake_position.row())][get_usize_from_i8(snake_position.column())]);
-    assert_eq!(EMPTY_VALUE_CHARACTER, cells[get_usize_from_i8(initial_snake_position.row())][get_usize_from_i8(initial_snake_position.column())]);
+    assert!(is_snake_head_in_position(cells, snake_position));
+    assert!(is_cell_empty(cells, initial_snake_position));
     assert_eq!(false, board.snake_has_crashed());
 }
 
@@ -65,8 +69,8 @@ pub fn move_snake_up() {
     let snake_position = Position::new(initial_snake_position.row() + 1, initial_snake_position.column() + 1);
     let cells = board.cells();
 
-    assert_eq!(SNAKE_HEAD_CHARACTER, cells[get_usize_from_i8(snake_position.row())][get_usize_from_i8(snake_position.column())]);
-    assert_eq!(EMPTY_VALUE_CHARACTER, cells[get_usize_from_i8(initial_snake_position.row())][get_usize_from_i8(initial_snake_position.column())]);
+    assert!(is_snake_head_in_position(cells, snake_position));
+    assert!(is_cell_empty(cells, initial_snake_position));
 }
 
 #[test]
@@ -85,8 +89,8 @@ pub fn move_snake_left() {
     let snake_position = Position::new(initial_snake_position.row() + 1, initial_snake_position.column() + 1);
     let cells = board.cells();
 
-    assert_eq!(SNAKE_HEAD_CHARACTER, cells[get_usize_from_i8(snake_position.row())][get_usize_from_i8(snake_position.column())]);
-    assert_eq!(EMPTY_VALUE_CHARACTER, cells[get_usize_from_i8(initial_snake_position.row())][get_usize_from_i8(initial_snake_position.column())]);
+    assert!(is_snake_head_in_position(cells, snake_position));
+    assert!(is_cell_empty(cells, initial_snake_position));
 }
 
 #[test]
@@ -146,8 +150,12 @@ fn cookie_is_created() {
     assert_eq!(1, count);
 }
 
-fn get_usize_from_u8(value: u8) -> usize {
-    return usize::try_from(value).unwrap();
+fn is_snake_head_in_position(cells: &Vec<Vec<char>>, position: Position) -> bool {
+    return SNAKE_HEAD_CHARACTER == cells[get_usize_from_i8(position.row())][get_usize_from_i8(position.column())];
+}
+
+fn is_cell_empty(cells: &Vec<Vec<char>>, position: Position) -> bool {
+    return EMPTY_VALUE_CHARACTER == cells[get_usize_from_i8(position.row())][get_usize_from_i8(position.column())];
 }
 
 fn get_usize_from_i8(value: i8) -> usize {
