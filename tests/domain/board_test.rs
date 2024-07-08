@@ -1,5 +1,5 @@
 use snake::domain::board::Board;
-use snake::domain::constants::COOKIE_CHARACTER;
+use snake::domain::constants::{COOKIE_CHARACTER, EMPTY_VALUE_CHARACTER, SNAKE_HEAD_CHARACTER};
 use snake::domain::direction::Direction;
 use snake::domain::position::Position;
 
@@ -10,7 +10,7 @@ pub fn inital_snake_position() {
 
     let cells = board.cells();
 
-    assert_eq!("$", cells[get_usize_from_u8(board.get_width() / 2)][get_usize_from_u8(board.get_height() / 2)])
+    assert_eq!(SNAKE_HEAD_CHARACTER, cells[get_usize_from_u8(board.get_width() / 2)][get_usize_from_u8(board.get_height() / 2)])
 }
 
 #[test]
@@ -26,8 +26,8 @@ pub fn move_snake_right() {
     let snake_position = Position::new(initial_snake_position.row(), initial_snake_position.column() + 1);
     let cells = board.cells();
 
-    assert_eq!("$", cells[get_usize_from_i8(snake_position.row())][get_usize_from_i8(snake_position.column())]);
-    assert_eq!("", cells[get_usize_from_i8(initial_snake_position.row())][get_usize_from_i8(initial_snake_position.column())]);
+    assert_eq!(SNAKE_HEAD_CHARACTER, cells[get_usize_from_i8(snake_position.row())][get_usize_from_i8(snake_position.column())]);
+    assert_eq!(EMPTY_VALUE_CHARACTER, cells[get_usize_from_i8(initial_snake_position.row())][get_usize_from_i8(initial_snake_position.column())]);
     assert_eq!(false, board.snake_has_crashed());
 }
 
@@ -44,8 +44,8 @@ pub fn move_snake_down() {
     let cells = board.cells();
     let snake_position = Position::new(initial_snake_position.row() + 1, initial_snake_position.column());
 
-    assert_eq!("$", cells[get_usize_from_i8(snake_position.row())][get_usize_from_i8(snake_position.column())]);
-    assert_eq!("", cells[get_usize_from_i8(initial_snake_position.row())][get_usize_from_i8(initial_snake_position.column())]);
+    assert_eq!(SNAKE_HEAD_CHARACTER, cells[get_usize_from_i8(snake_position.row())][get_usize_from_i8(snake_position.column())]);
+    assert_eq!(EMPTY_VALUE_CHARACTER, cells[get_usize_from_i8(initial_snake_position.row())][get_usize_from_i8(initial_snake_position.column())]);
     assert_eq!(false, board.snake_has_crashed());
 }
 
@@ -65,8 +65,8 @@ pub fn move_snake_up() {
     let snake_position = Position::new(initial_snake_position.row() + 1, initial_snake_position.column() + 1);
     let cells = board.cells();
 
-    assert_eq!("$", cells[get_usize_from_i8(snake_position.row())][get_usize_from_i8(snake_position.column())]);
-    assert_eq!("", cells[get_usize_from_i8(initial_snake_position.row())][get_usize_from_i8(initial_snake_position.column())]);
+    assert_eq!(SNAKE_HEAD_CHARACTER, cells[get_usize_from_i8(snake_position.row())][get_usize_from_i8(snake_position.column())]);
+    assert_eq!(EMPTY_VALUE_CHARACTER, cells[get_usize_from_i8(initial_snake_position.row())][get_usize_from_i8(initial_snake_position.column())]);
 }
 
 #[test]
@@ -85,8 +85,8 @@ pub fn move_snake_left() {
     let snake_position = Position::new(initial_snake_position.row() + 1, initial_snake_position.column() + 1);
     let cells = board.cells();
 
-    assert_eq!("$", cells[get_usize_from_i8(snake_position.row())][get_usize_from_i8(snake_position.column())]);
-    assert_eq!("", cells[get_usize_from_i8(initial_snake_position.row())][get_usize_from_i8(initial_snake_position.column())]);
+    assert_eq!(SNAKE_HEAD_CHARACTER, cells[get_usize_from_i8(snake_position.row())][get_usize_from_i8(snake_position.column())]);
+    assert_eq!(EMPTY_VALUE_CHARACTER, cells[get_usize_from_i8(initial_snake_position.row())][get_usize_from_i8(initial_snake_position.column())]);
 }
 
 #[test]
@@ -145,7 +145,6 @@ fn cookie_is_created() {
 
     assert_eq!(1, count);
 }
-
 
 fn get_usize_from_u8(value: u8) -> usize {
     return usize::try_from(value).unwrap();

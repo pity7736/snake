@@ -3,8 +3,7 @@ use std::{io, sync::mpsc::{self, Receiver}, thread::{self, sleep}, time::Duratio
 use crate::{
     application::ui::UI,
     domain::{
-        board::Board,
-        direction::Direction
+        board::Board, constants::EMPTY_VALUE_CHARACTER, direction::Direction
     }
 };
 
@@ -37,7 +36,7 @@ impl UI for ConsoleUI{
         for row in board.cells() {
             print!("|");
             for cell in row {
-                if cell.is_empty() {
+                if *cell == EMPTY_VALUE_CHARACTER {
                     print!(". ");
                 } else {
                     print!("{} ", cell)
