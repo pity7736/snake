@@ -8,6 +8,7 @@ name = "snake"
 path = "src/main.rs"
 
 [dependencies]
+rand = "0.8.5"
 
 [dev-dependencies]
 mockall = "0.12.1"

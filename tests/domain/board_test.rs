@@ -130,6 +130,22 @@ fn snake_up_crash() {
     assert_eq!(true, board.snake_has_crashed());
 }
 
+#[test]
+fn cookie_is_created() {
+    let cookie = "#".to_string();
+    let mut count: i8 = 0;
+    let board = Board::new();
+    for row in board.cells() {
+        for cell in row {
+           if *cell == cookie.clone() {
+               count += 1
+           }
+        }
+    }
+
+    assert_eq!(1, count)
+}
+
 
 fn get_usize_from_u8(value: u8) -> usize {
     return usize::try_from(value).unwrap();

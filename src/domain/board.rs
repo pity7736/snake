@@ -1,3 +1,5 @@
+use rand::Rng;
+
 use super::{direction::Direction, position::Position};
 
 
@@ -17,7 +19,6 @@ impl Board {
         let mut columns:Vec<String> = Vec::with_capacity(width.into());
         let mut cells: Vec<Vec<String>> = Vec::with_capacity(height.into());
         let empty_value_character = String::from("");
-        let snake_head_character = String::from("$");
         for _ in 0..width {
             columns.push(empty_value_character.clone());
         }
@@ -28,15 +29,21 @@ impl Board {
             (width / 2).try_into().unwrap(),
             (height / 2).try_into().unwrap()
         );
-        cells[usize::try_from(snake_position.row()).unwrap()][usize::try_from(snake_position.column()).unwrap()] = snake_head_character.clone();
-        Self {
+        let mut board = Self {
             cells,
             snake_position,
             empty_value_character,
-            snake_head_character,
+            snake_head_character: String::from("$"),
             width,
             height
-        }
+        };
+        board.init();
+        return board;
+    }
+
+    fn init(&mut self) {
+        self.set_value_in_cells(self.snake_position, self.snake_head_character.clone());
+        self.create_cookie();
     }
 
     pub fn move_snake(&mut self, direction: Direction) {
@@ -51,6 +58,23 @@ impl Board {
 
     fn set_value_in_cells(&mut self, position: Position, value: String) {
         self.cells[usize::try_from(position.row()).unwrap()][usize::try_from(position.column()).unwrap()] = value;
+    }
+
+    fn create_cookie(&mut self) {
+        let position = Position::new(
+            rand::thread_rng().gen_range(0..self.width).try_into().unwrap(),
+            rand::thread_rng().gen_range(0..self.height).try_into().unwrap()
+        );
+        if self.is_cell_empty(position) {
+            self.set_value_in_cells(position, String::from("#"));
+        } else {
+            self.create_cookie();
+        }
+    }
+
+    fn is_cell_empty(&self, position: Position) -> bool {
+        let cell_value = self.cells[usize::try_from(position.row()).unwrap()][usize::try_from(position.column()).unwrap()].clone();
+        return cell_value == self.empty_value_character;
     }
 
     fn is_position_within_board(&self, position: Position) -> bool {
