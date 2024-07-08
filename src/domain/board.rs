@@ -1,13 +1,11 @@
 use rand::Rng;
 
-use super::{direction::Direction, position::Position};
+use super::{constants::{COOKIE_CHARACTER, EMPTY_VALUE_CHARACTER, SNAKE_HEAD_CHARACTER}, direction::Direction, position::Position};
 
 
 pub struct Board {
     cells: Vec<Vec<String>>,
     snake_position: Position,
-    empty_value_character: String,
-    snake_head_character: String,
     width: u8,
     height: u8
 }
@@ -18,9 +16,8 @@ impl Board {
         let height: u8 = 30;
         let mut columns:Vec<String> = Vec::with_capacity(width.into());
         let mut cells: Vec<Vec<String>> = Vec::with_capacity(height.into());
-        let empty_value_character = String::from("");
         for _ in 0..width {
-            columns.push(empty_value_character.clone());
+            columns.push(EMPTY_VALUE_CHARACTER.to_owned());
         }
         for _ in 0..height {
             cells.push(columns.clone());
@@ -32,8 +29,6 @@ impl Board {
         let mut board = Self {
             cells,
             snake_position,
-            empty_value_character,
-            snake_head_character: String::from("$"),
             width,
             height
         };
@@ -42,7 +37,7 @@ impl Board {
     }
 
     fn init(&mut self) {
-        self.set_value_in_cells(self.snake_position, self.snake_head_character.clone());
+        self.set_value_in_cells(self.snake_position, SNAKE_HEAD_CHARACTER.to_owned());
         self.create_cookie();
     }
 
@@ -51,8 +46,8 @@ impl Board {
         let position = self.snake_position.move_(direction);
         self.snake_position = position;
         if self.is_position_within_board(position){
-            self.set_value_in_cells(current_snake_position, self.empty_value_character.clone());
-            self.set_value_in_cells(position, self.snake_head_character.clone());
+            self.set_value_in_cells(current_snake_position, EMPTY_VALUE_CHARACTER.to_owned());
+            self.set_value_in_cells(position, SNAKE_HEAD_CHARACTER.to_owned());
         }
     }
 
@@ -66,7 +61,7 @@ impl Board {
             rand::thread_rng().gen_range(0..self.height).try_into().unwrap()
         );
         if self.is_cell_empty(position) {
-            self.set_value_in_cells(position, String::from("#"));
+            self.set_value_in_cells(position, COOKIE_CHARACTER.to_owned());
         } else {
             self.create_cookie();
         }
@@ -74,7 +69,7 @@ impl Board {
 
     fn is_cell_empty(&self, position: Position) -> bool {
         let cell_value = self.cells[usize::try_from(position.row()).unwrap()][usize::try_from(position.column()).unwrap()].clone();
-        return cell_value == self.empty_value_character;
+        return cell_value == EMPTY_VALUE_CHARACTER.to_owned()
     }
 
     fn is_position_within_board(&self, position: Position) -> bool {

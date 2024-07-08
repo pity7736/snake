@@ -1,4 +1,5 @@
 use snake::domain::board::Board;
+use snake::domain::constants::COOKIE_CHARACTER;
 use snake::domain::direction::Direction;
 use snake::domain::position::Position;
 
@@ -132,18 +133,17 @@ fn snake_up_crash() {
 
 #[test]
 fn cookie_is_created() {
-    let cookie = "#".to_string();
     let mut count: i8 = 0;
     let board = Board::new();
     for row in board.cells() {
         for cell in row {
-           if *cell == cookie.clone() {
+           if *cell == COOKIE_CHARACTER {
                count += 1
            }
         }
     }
 
-    assert_eq!(1, count)
+    assert_eq!(1, count);
 }
 
 
