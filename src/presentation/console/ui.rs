@@ -31,13 +31,14 @@ impl UI for ConsoleUI{
     fn show(&self, board: &Board) {
         sleep(Duration::from_millis(100));
         print!("{esc}c", esc = 27 as char);
+        println!("");
         ConsoleUI::print_horizontal_line(board);
         println!("");
         for row in board.cells() {
             print!("|");
             for cell in row {
                 if *cell == EMPTY_VALUE_CHARACTER {
-                    print!(". ");
+                    print!("  ");
                 } else {
                     print!("{} ", cell)
                 }
