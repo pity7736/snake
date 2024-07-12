@@ -1,11 +1,11 @@
 use rand::Rng;
 
-use super::{constants::{COOKIE_CHARACTER, EMPTY_VALUE_CHARACTER, SNAKE_BODY_CHARACTER, SNAKE_HEAD_CHARACTER}, direction::Direction, position::Position};
+use super::{constants::{COOKIE_CHARACTER, EMPTY_VALUE_CHARACTER, SNAKE_BODY_CHARACTER, SNAKE_HEAD_CHARACTER}, direction::Direction, position::Position, snake::Snake};
 
 
 pub struct Board {
     cells: Vec<Vec<char>>,
-    snake: Vec<Position>,
+    snake: Snake,
     width: u8,
     height: u8
 }
@@ -22,8 +22,7 @@ impl Board {
         for _ in 0..height {
             cells.push(columns.clone());
         }
-        let mut snake: Vec<Position> = Vec::with_capacity(15);
-        snake.push(Position::new(
+        let snake = Snake::new(Position::new(
             (width / 2).try_into().unwrap(),
             (height / 2).try_into().unwrap()
         ));
@@ -38,21 +37,16 @@ impl Board {
     }
 
     fn init(&mut self) {
-        self.set_value_in_cells(self.snake[0], SNAKE_HEAD_CHARACTER);
+        self.set_value_in_cells(self.snake.head(), SNAKE_HEAD_CHARACTER);
         self.create_cookie();
     }
 
     pub fn move_snake(&mut self, direction: Direction) {
-        let new_snake_position = self.snake[0].move_(direction);
-        let tail_snake_position = self.snake[self.snake.len() - 1];
-        let snake = self.snake.clone();
-        self.snake[0] = new_snake_position;
-        if self.is_position_within_board(new_snake_position) {
-            for i in 1..self.snake.len() {
-                self.snake[i] = snake[i - 1];
-            }
-            if self.is_cookie_in_position(new_snake_position) {
-                self.snake.push(tail_snake_position.clone());
+        let tail_snake_position = self.snake.tail();
+        self.snake.move_(direction);
+        if self.is_position_within_board(self.snake.head()) {
+            if self.is_cookie_in_position(self.snake.head()) {
+                self.snake.eat();
                 self.create_cookie();
             } else {
                 self.set_value_in_cells(tail_snake_position, EMPTY_VALUE_CHARACTER);
@@ -91,9 +85,9 @@ impl Board {
     }
 
     fn set_snake(&mut self) {
-        self.set_value_in_cells(self.snake[0], SNAKE_HEAD_CHARACTER);
-        for i in 1..self.snake.len() {
-            self.set_value_in_cells(self.snake[i], SNAKE_BODY_CHARACTER);
+        self.set_value_in_cells(self.snake.head(), SNAKE_HEAD_CHARACTER);
+        for position in self.snake.body() {
+            self.set_value_in_cells(position, SNAKE_BODY_CHARACTER);
         }
     }
 
@@ -102,10 +96,10 @@ impl Board {
     }
 
     pub fn snake_has_crashed(&self) -> bool {
-        return self.snake[0].column().is_negative() ||
-            self.snake[0].row().is_negative() ||
-            self.snake[0].column() > self.width.try_into().unwrap() ||
-            self.snake[0].row() > self.height.try_into().unwrap();
+        return self.snake.head().column().is_negative() ||
+            self.snake.head().row().is_negative() ||
+            self.snake.head().column() > self.width.try_into().unwrap() ||
+            self.snake.head().row() > self.height.try_into().unwrap();
     }
 
     pub fn cells(&self) -> &Vec<Vec<char>> {
