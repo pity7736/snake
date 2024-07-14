@@ -85,9 +85,11 @@ impl Board {
     }
 
     fn set_snake(&mut self) {
-        self.set_value_in_cells(self.snake.head(), SNAKE_HEAD_CHARACTER);
-        for position in self.snake.body() {
-            self.set_value_in_cells(position, SNAKE_BODY_CHARACTER);
+        if !self.snake_has_crashed() {
+            self.set_value_in_cells(self.snake.head(), SNAKE_HEAD_CHARACTER);
+            for position in self.snake.body() {
+                self.set_value_in_cells(position, SNAKE_BODY_CHARACTER);
+            }
         }
     }
 
@@ -99,7 +101,8 @@ impl Board {
         return self.snake.head().column().is_negative() ||
             self.snake.head().row().is_negative() ||
             self.snake.head().column() > self.width.try_into().unwrap() ||
-            self.snake.head().row() > self.height.try_into().unwrap();
+            self.snake.head().row() > self.height.try_into().unwrap() || 
+            self.snake.has_crashed() == true;
     }
 
     pub fn cells(&self) -> &Vec<Vec<char>> {

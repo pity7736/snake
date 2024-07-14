@@ -38,4 +38,13 @@ impl Snake {
     pub fn tail(&self) -> Position {
         return self.body[self.body.len() - 1];
     }
+
+    pub fn has_crashed(&self) -> bool {
+        for i in 1..self.body.len() {
+            if self.body[0] == self.body[i] {
+                return true;
+            }
+        }
+        return false;
+    }
 }
