@@ -190,28 +190,6 @@ fn eat_cookie_twice_and_move() {
     assert!(is_cell_empty(board.cells(), old_snake_position));
 }
 
-fn get_cookie_position(board: &Board) -> Option<Position> {
-    for (row_index, row) in board.cells().iter().enumerate() {
-        for (cell_index,cell) in row.iter().enumerate() {
-           if *cell == COOKIE_CHARACTER {
-               return Some(Position::new(row_index.try_into().unwrap(), cell_index.try_into().unwrap()));
-           }
-        }
-    }
-    return None;
-}
-
-fn get_snake_position(board: &Board) -> Option<Position> {
-    for (row_index, row) in board.cells().iter().enumerate() {
-        for (cell_index,cell) in row.iter().enumerate() {
-           if *cell == SNAKE_HEAD_CHARACTER {
-               return Some(Position::new(row_index.try_into().unwrap(), cell_index.try_into().unwrap()));
-           }
-        }
-    }
-    return None;
-}
-
 fn _eat_cookie(board: &mut Board) -> (Direction, Direction) {
     let mut oposite_snake_direction = Direction::DOWN;
     let mut current_snake_direction = Direction::RIGHT;
@@ -242,6 +220,28 @@ fn _eat_cookie(board: &mut Board) -> (Direction, Direction) {
         current_snake_direction = Direction::LEFT;
     }
     return (current_snake_direction, oposite_snake_direction);
+}
+
+fn get_cookie_position(board: &Board) -> Option<Position> {
+    for (row_index, row) in board.cells().iter().enumerate() {
+        for (cell_index,cell) in row.iter().enumerate() {
+           if *cell == COOKIE_CHARACTER {
+               return Some(Position::new(row_index.try_into().unwrap(), cell_index.try_into().unwrap()));
+           }
+        }
+    }
+    return None;
+}
+
+fn get_snake_position(board: &Board) -> Option<Position> {
+    for (row_index, row) in board.cells().iter().enumerate() {
+        for (cell_index,cell) in row.iter().enumerate() {
+           if *cell == SNAKE_HEAD_CHARACTER {
+               return Some(Position::new(row_index.try_into().unwrap(), cell_index.try_into().unwrap()));
+           }
+        }
+    }
+    return None;
 }
 
 fn check_one_snake_head(cells: &Vec<Vec<char>>) -> bool {
