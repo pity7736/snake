@@ -154,12 +154,7 @@ fn cookie_is_created() {
 fn eat_cookie() {
     let mut board = Board::new();
     let cookie_position = get_cookie_position(&board).unwrap();
-    let snake_position = Position::new(
-        ((board.get_width() / 2)).try_into().unwrap(),
-        (board.get_height() / 2).to_owned().try_into().unwrap()
-    );
-    let oposite_snake_direction: Direction;
-    (_, oposite_snake_direction) = _eat_cookie(&mut board, &cookie_position, snake_position);
+    let (_, oposite_snake_direction) = _eat_cookie(&mut board);
     let old_snake_position = cookie_position.move_(oposite_snake_direction);
 
     assert!(is_snake_head_in_position(board.cells(), cookie_position));
@@ -171,14 +166,7 @@ fn eat_cookie() {
 fn eat_cookie_and_move() {
     let mut board = Board::new();
     let cookie_position = get_cookie_position(&board).unwrap();
-    let snake_position = Position::new(
-        ((board.get_width() / 2)).try_into().unwrap(),
-        (board.get_height() / 2).to_owned().try_into().unwrap()
-    );
-    let oposite_snake_direction: Direction;
-    let current_snake_direction: Direction;
-
-    (current_snake_direction, oposite_snake_direction) = _eat_cookie(&mut board, &cookie_position, snake_position);
+    let (current_snake_direction, oposite_snake_direction) = _eat_cookie(&mut board);
     let old_snake_position = cookie_position.move_(oposite_snake_direction);
     board.move_snake(current_snake_direction);
 
@@ -190,15 +178,10 @@ fn eat_cookie_and_move() {
 #[test]
 fn eat_cookie_twice_and_move() {
     let mut board = Board::new();
-    let mut cookie_position = get_cookie_position(&board).unwrap();
-    let mut snake_position = get_snake_position(&board).unwrap();
-    let oposite_snake_direction: Direction;
-    let current_snake_direction: Direction;
 
-    _eat_cookie(&mut board, &cookie_position, snake_position);
-    cookie_position = get_cookie_position(&board).unwrap();
-    snake_position = get_snake_position(&board).unwrap();
-    (current_snake_direction, oposite_snake_direction) = _eat_cookie(&mut board, &cookie_position, snake_position);
+    _eat_cookie(&mut board);
+    let cookie_position = get_cookie_position(&board).unwrap();
+    let (current_snake_direction, oposite_snake_direction) = _eat_cookie(&mut board);
     let old_snake_position = cookie_position.move_(oposite_snake_direction).move_(oposite_snake_direction);
     board.move_snake(current_snake_direction);
 
@@ -229,9 +212,11 @@ fn get_snake_position(board: &Board) -> Option<Position> {
     return None;
 }
 
-fn _eat_cookie(board: &mut Board, cookie_position: &Position, mut snake_position: Position) -> (Direction, Direction) {
+fn _eat_cookie(board: &mut Board) -> (Direction, Direction) {
     let mut oposite_snake_direction = Direction::DOWN;
     let mut current_snake_direction = Direction::RIGHT;
+    let cookie_position = get_cookie_position(board).unwrap();
+    let mut snake_position = get_snake_position(board).unwrap();
     while cookie_position.row() > snake_position.row() {
         snake_position = snake_position.move_(Direction::DOWN);
         board.move_snake(Direction::DOWN);
